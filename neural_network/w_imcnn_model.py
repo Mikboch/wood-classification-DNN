@@ -25,9 +25,9 @@ class WIMCNNModel(nn.Module):
             nn.MaxPool2d(3, stride=2)
         )
         self.WIMCNNUnit = nn.Sequential(
-            WIMCNNBlock(64, (96, 128), (16, 24, 32), 32),
-            WIMCNNBlock(128, (128, 192), (32, 64, 96), 64),
-            WIMCNNBlock(192, (96, 208), (16, 32, 48), 64),
+            WIMCNNBlock(256, 64, (96, 128), (16, 24, 32), 32),
+            WIMCNNBlock(480, 128, (128, 192), (32, 64, 96), 64),
+            WIMCNNBlock(512, 192, (96, 208), (16, 32, 48), 64),
         )
         self.AvgPool = nn.AvgPool2d(13)
         self.linear = nn.Linear(512, num_classes)

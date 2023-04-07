@@ -3,8 +3,13 @@ from torch import nn
 
 
 class WIMCNNBlock(nn.Module):
-    def __init__(self, c1, c2, c3, c4):
+    def __init__(self, out_channels, c1, c2, c3, c4):
         super().__init__()
+        self.residual = nn.Sequential(
+            # Conv1x1
+            nn.LazyConv2d(out_channels, kernel_size=1, bias=False),
+            nn.ReLU6(inplace=True)
+        )
         self.conv1x1 = nn.Sequential(
             # Conv1x1
             nn.LazyConv2d(c1, kernel_size=1, bias=False),
@@ -49,7 +54,7 @@ class WIMCNNBlock(nn.Module):
         )
 
         def forward(self, x):
-            residual = self.conv1x1(x)
+            residual = self.residual(x)
             branch_1 = self.conv1x1(x)
             branch_2 = self.conv3x3(x)
             branch_3 = self.conv5x5(x)
