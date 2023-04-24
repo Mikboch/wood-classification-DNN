@@ -1,6 +1,6 @@
 import os
 import lightning as L
-from pytorch_lightning.callbacks import ModelCheckpoint, LearningRateMonitor
+from lightning.pytorch.callbacks import ModelCheckpoint, LearningRateMonitor
 
 from src.config.consts import CHECKPOINT_PATH
 from src.models.wood_module import WoodModule
