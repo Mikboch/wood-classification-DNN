@@ -3,9 +3,11 @@ import torch
 import torch.nn as nn
 import torch.optim as optim
 
+from src.models.net.w_imcnn_model import WIMCNNModel
+
 
 class WoodModule(L.LightningModule):
-    def __init__(self, model, optimizer_name, optimizer_hparams):
+    def __init__(self, model_name, model_hparams, optimizer_name, optimizer_hparams):
         """
         Inputs:
             model - Model/CNN to run
@@ -15,6 +17,7 @@ class WoodModule(L.LightningModule):
         super().__init__()
         # Exports the hyperparameters to a YAML file, and create "self.hparams" namespace
         self.save_hyperparameters()
+        self.model = WIMCNNModel()
         # Create loss module
         self.loss_module = nn.CrossEntropyLoss()
         # Example input for visualizing the graph in Tensorboard

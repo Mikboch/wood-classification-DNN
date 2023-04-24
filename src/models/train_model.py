@@ -3,10 +3,11 @@ import lightning as L
 from lightning.pytorch.callbacks import ModelCheckpoint, LearningRateMonitor
 
 from src.config.consts import CHECKPOINT_PATH
+from src.data.make_dataset import get_data_loaders
 from src.models.wood_module import WoodModule
 
 
-def train_model(model, train_loader, val_loader, save_name=None, **kwargs):
+def train_model(model_name, save_name=None, **kwargs):
     """
     Inputs:
         model_name - Name of the model you want to run. Is used to look up the class in "model_dict"
@@ -16,6 +17,7 @@ def train_model(model, train_loader, val_loader, save_name=None, **kwargs):
         save_name = "W_IMCNN"
 
     # Create a PyTorch Lightning trainer with the generation callback
+    train_loader, val_loader = get_data_loaders()
     L.seed_everything(42)
     trainer = L.Trainer(
         default_root_dir=os.path.join(CHECKPOINT_PATH, save_name),  # Where to save models
@@ -42,7 +44,7 @@ def train_model(model, train_loader, val_loader, save_name=None, **kwargs):
         model = WoodModule.load_from_checkpoint(pretrained_filename)
     else:
         L.seed_everything(42)  # To be reproducable
-        model = WoodModule(model=model, **kwargs)
+        model = WoodModule(model_name=model_name, **kwargs)
         trainer.fit(model, train_loader, val_loader)
         model = WoodModule.load_from_checkpoint(
             trainer.checkpoint_callback.best_model_path
