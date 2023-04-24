@@ -1,7 +1,5 @@
 import os
-import zipfile
 
-import gdown
 import torch
 import torchvision
 from torchvision import datasets
