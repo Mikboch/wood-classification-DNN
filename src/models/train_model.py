@@ -16,6 +16,7 @@ def train_model(model, train_loader, val_loader, save_name=None, **kwargs):
         save_name = "W_IMCNN"
 
     # Create a PyTorch Lightning trainer with the generation callback
+    L.seed_everything(42)
     trainer = L.Trainer(
         default_root_dir=os.path.join(CHECKPOINT_PATH, save_name),  # Where to save models
         # We run on a single GPU (if possible)

@@ -5,7 +5,7 @@ import torch.optim as optim
 
 
 class WoodModule(L.LightningModule):
-    def __init__(self):
+    def __init__(self, model):
         """
         Inputs:
             model - Model/CNN to run
