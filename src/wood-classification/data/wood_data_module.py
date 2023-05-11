@@ -1,4 +1,5 @@
-import torch
+import os
+
 from torch.utils.data import DataLoader
 import pytorch_lightning as pl
 from torchvision.datasets import ImageFolder
@@ -26,11 +27,13 @@ class WoodDataModule(pl.LightningDataModule):
             [Resize(self.image_size), ToTensor(), Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 
     def prepare_data(self):
+        os.chdir('../data/raw')
         zip_name = 'wood_dataset.zip'
         gdown.download('https://drive.google.com/uc?id=1lbYAc5fUoKX06hktIghdma6LOyxpFFg8&confirm=t', output=zip_name,
                        quiet=False)
         with zipfile.ZipFile(zip_name, 'r') as zip_ref:
             zip_ref.extractall(self.data_dir)
+        os.chdir('../../src')
 
     def setup(self, stage=None):
         # train/val
