@@ -55,7 +55,6 @@ def main(cfg: DictConfig):
     trainer = pl.Trainer(max_epochs=cfg.trainer.max_epochs, gpus=cfg.trainer.gpus,
                          callbacks=[early_stop_callback, checkpoint_callback, model_summary_callback, timer],
                          default_root_dir=cfg.trainer.default_root_dir)
-    os.chdir(cfg.working_dir)
     # Trenowanie modelu
     trainer.fit(lightning_module, data_module)
     # Ewaluacja modelu

@@ -22,8 +22,6 @@ trainer:
   gpus: 1
   default_root_dir: '/content/wood-classification-DNN/reports'
 
-working_dir: '/content/wood-classification-DNN'
-
 defaults:
   - data: wood_data_module
   - models: wimcnn_model
