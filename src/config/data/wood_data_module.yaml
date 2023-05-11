@@ -5,6 +5,6 @@ batch_size: 32
 data_dir: './wood_dataset/'
 train_dataset_path: '/content/wood_dataset/wood_dataset/train'
 test_dataset_path: '/content/wood_dataset/wood_dataset/val'
-image_size: (228, 228)
+image_size: [228, 228]
 num_classes: 12
 split_ratio: 0.9
