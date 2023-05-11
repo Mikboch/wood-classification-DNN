@@ -10,7 +10,7 @@ import zipfile
 
 
 class WoodDataModule(pl.LightningDataModule):
-    def __init__(self, batch_size, data_dir: str = '/content/wood-classification-DNN/data/external/wood_dataset',
+    def __init__(self, batch_size, data_dir: str = '/content/wood-classification-DNN/data/external',
                  train_dataset_path='/content/wood-classification-DNN/data/external/wood_dataset/train',
                  test_dataset_path='/content/wood-classification-DNN/data/external/wood_dataset/val', image_size=(228, 228), num_classes=12,
                  split_ratio=0.9, **kwargs):
