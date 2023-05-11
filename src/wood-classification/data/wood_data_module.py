@@ -27,7 +27,7 @@ class WoodDataModule(pl.LightningDataModule):
 
     def prepare_data(self):
         zip_name = 'wood_dataset.zip'
-        gdown.download('https://drive.google.com/uc?id=1lbYAc5fUoKX06hktIghdma6LOyxpFFg8&confirm=t', folder=self.data_dir, output=zip_name,
+        gdown.download('https://drive.google.com/uc?id=1lbYAc5fUoKX06hktIghdma6LOyxpFFg8&confirm=t', output=zip_name,
                        quiet=False)
         with zipfile.ZipFile(zip_name, 'r') as zip_ref:
             zip_ref.extractall(self.data_dir)
