@@ -53,7 +53,7 @@ def main(cfg: DictConfig):
     lightning_module = instantiate(cfg.modules)
     # Inicjalizacja trenera
     trainer = pl.Trainer(max_epochs=cfg.trainer.max_epochs, gpus=cfg.trainer.gpus,
-                         callbacks=cfg.trainer.callbacks)
+                         callbacks=[early_stop_callback, checkpoint_callback, model_summary_callback, timer])
     # Trenowanie modelu
     trainer.fit(lightning_module, data_module)
     # Ewaluacja modelu

@@ -20,7 +20,6 @@ timer:
 trainer:
   max_epochs: 100
   gpus: 1
-  callbacks: [early_stop_callback, checkpoint_callback, model_summary_callback, timer]
 
 defaults:
   - data: wood_data_module
