@@ -1,7 +1,7 @@
 name: wood_lightning_module
 _target_: wood-classification.modules.wood_lightning_module.WoodLightningModule
 
-model: ${models.wimcnn_model}
+model: ${models}
 num_classes: ${data.wood_data_module.num_classes}
 learning_rate: 2 * 1e-4
 
