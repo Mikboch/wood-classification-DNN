@@ -3,6 +3,7 @@ name: wood_data_module
 _target_: wood-classification.data.wood_data_module.WoodDataModule
 batch_size: 32
 data_dir: '/content/wood-classification-DNN/data/external'
+raw_data_dir: '/content/wood-classification-DNN/data/raw'
 train_dataset_path: '/content/wood-classification-DNN/data/external/wood_dataset/train'
 test_dataset_path: '/content/wood-classification-DNN/data/external/wood_dataset/val'
 image_size: [228, 228]
