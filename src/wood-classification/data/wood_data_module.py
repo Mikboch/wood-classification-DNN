@@ -28,7 +28,7 @@ class WoodDataModule(pl.LightningDataModule):
             [Resize(self.image_size), ToTensor(), Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 
     def prepare_data(self):
-        current_path = os.path
+        current_path = os.getcwd()
         os.chdir(self.raw_data_dir)
         zip_name = 'wood_dataset.zip'
         gdown.download('https://drive.google.com/uc?id=1lbYAc5fUoKX06hktIghdma6LOyxpFFg8&confirm=t', output=zip_name,
