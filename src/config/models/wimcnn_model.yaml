@@ -1,0 +1,10 @@
+name: wimcnn_model
+_target_: wood-classification.models.wimcnn_model.WIMCNNModel
+
+num_classes: 12
+in_channels: 3
+N_features_first: 64
+N_in_unit_features: 192
+N_out_first_WIMCNN_block: 256
+N_out_second_WIMCNN_block: 480
+N_final_features: 512
