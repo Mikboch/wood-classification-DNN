@@ -14,7 +14,7 @@ class WoodDataModule(pl.LightningDataModule):
     def __init__(self, batch_size, data_dir: str = '/content/wood-classification-DNN/data/external', raw_data_dir='/content/wood-classification-DNN/data/raw',
                  train_dataset_path='/content/wood-classification-DNN/data/external/wood_dataset/train',
                  test_dataset_path='/content/wood-classification-DNN/data/external/wood_dataset/val', image_size=(228, 228), num_classes=12,
-                 split_ratio=0.9, **kwargs):
+                 split_ratio=0.9, drive_id='1lbYAc5fUoKX06hktIghdma6LOyxpFFg', dataset_name='wood_dataset', **kwargs):
         super().__init__()
         self.data_dir = data_dir
         self.raw_data_dir = raw_data_dir
@@ -24,14 +24,16 @@ class WoodDataModule(pl.LightningDataModule):
         self.image_size = image_size
         self.num_classes = num_classes
         self.split_ratio = split_ratio
+        self.drive_id = drive_id
+        self.dataset_name = dataset_name
         self.imagenet_transform = Compose(
             [Resize(self.image_size), ToTensor(), Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 
     def prepare_data(self):
         current_path = os.getcwd()
         os.chdir(self.raw_data_dir)
-        zip_name = 'wood_dataset.zip'
-        gdown.download('https://drive.google.com/uc?id=1lbYAc5fUoKX06hktIghdma6LOyxpFFg8&confirm=t', output=zip_name,
+        zip_name = self.dataset_name + '.zip'
+        gdown.download('https://drive.google.com/uc?id=' + self.drive_id + '&confirm=t', output=zip_name,
                        quiet=False)
         with zipfile.ZipFile(zip_name, 'r') as zip_ref:
             zip_ref.extractall(self.data_dir)

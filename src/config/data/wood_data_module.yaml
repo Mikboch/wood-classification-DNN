@@ -9,3 +9,5 @@ test_dataset_path: '/content/wood-classification-DNN/data/external/wood_dataset/
 image_size: [228, 228]
 num_classes: 12
 split_ratio: 0.9
+drive_id: '1lbYAc5fUoKX06hktIghdma6LOyxpFFg'
+dataset_name: 'wood_dataset'

@@ -9,14 +9,18 @@ import torchmetrics
 
 
 class WoodLightningModule(pl.LightningModule):
-    def __init__(self, model, num_classes, learning_rate=2 * 1e-4, **kwargs):
+    def __init__(self, model, num_classes, learning_rate=2 * 1e-4, use_pretrained=False, **kwargs):
         super().__init__()
         self.save_hyperparameters()
         self.learning_rate = learning_rate
         self.num_classes = num_classes
-        self.model = model
+        self.use_pretrained = use_pretrained
+        if use_pretrained:
+            self.model = self.pretrained_model()
+        else:
+            self.model = model
 
-    def test_model(self):
+    def pretrained_model(self):
         net_resnet34 = models.resnet34(pretrained=True)
         # zamrożenie parametrów sieci
         for param in net_resnet34.parameters():
