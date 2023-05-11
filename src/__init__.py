@@ -25,7 +25,7 @@ from hydra.utils import instantiate
 from omegaconf import DictConfig, OmegaConf
 
 
-@hydra.main(config_path="conf", config_name="config")
+@hydra.main(config_path="config", config_name="config")
 def main(cfg: DictConfig):
     data_module = instantiate(cfg.data)
     data_module.prepare_data()
