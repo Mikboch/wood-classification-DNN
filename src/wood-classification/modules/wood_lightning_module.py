@@ -21,14 +21,14 @@ class WoodLightningModule(pl.LightningModule):
             self.model = model
 
     def pretrained_model(self):
-        net_resnet34 = models.resnet34(pretrained=True)
+        net_pretrained = models.resnet34(pretrained=True)
         # zamrożenie parametrów sieci
-        for param in net_resnet34.parameters():
+        for param in net_pretrained.parameters():
             param.requires_grad = False
-        num_in_features = net_resnet34.fc.in_features  # liczba cech wejściowych się nie zmienia, natomiast liczbę cech wyjściowych podmienimy na num_classes = 2
-        net_resnet34.fc = nn.Linear(num_in_features,
-                                    self.num_classes)  # nadpisanie warstwy fc nową warstwą - w tym przykładzie tylko ta byłaby trenowana
-        return net_resnet34
+        num_in_features = net_pretrained.fc.in_features  # liczba cech wejściowych się nie zmienia, natomiast liczbę cech wyjściowych podmienimy na num_classes = 2
+        net_pretrained.fc = nn.Linear(num_in_features,
+                                      self.num_classes)  # nadpisanie warstwy fc nową warstwą - w tym przykładzie tylko ta byłaby trenowana
+        return net_pretrained
 
     def forward(self, x):
         return self.model(x)
