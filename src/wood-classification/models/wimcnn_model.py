@@ -5,32 +5,32 @@ from torch.nn import functional as F
 
 class WIMCNNModel(nn.Module):
     def __init__(self, num_classes=12, in_channels=3,
-                 N_features_first=64,
-                 N_in_unit_features=192,
-                 N_out_first_WIMCNN_block=256,
-                 N_out_second_WIMCNN_block=480,
-                 N_final_features=512, **kwargs):
+                 channels_before_wimcnn_unit=64,
+                 wimcnn_unit_in_channels=192,
+                 wimcnn_first_block_out_channels=256,
+                 wimcnn_second_block_out_channels=480,
+                 out_channels=512, **kwargs):
         super().__init__()
 
         self.convBlock1 = nn.Sequential(
-            nn.Conv2d(in_channels, N_features_first, kernel_size=3, stride=2),
+            nn.Conv2d(in_channels, channels_before_wimcnn_unit, kernel_size=3, stride=2),
             nn.ReLU6(),
 
-            nn.Conv2d(N_features_first, N_features_first, kernel_size=3, stride=2),
+            nn.Conv2d(channels_before_wimcnn_unit, channels_before_wimcnn_unit, kernel_size=3, stride=2),
             nn.ReLU6(),
 
-            nn.Conv2d(N_features_first, N_features_first, kernel_size=3, padding=1),
-            nn.BatchNorm2d(N_features_first),
+            nn.Conv2d(channels_before_wimcnn_unit, channels_before_wimcnn_unit, kernel_size=3, padding=1),
+            nn.BatchNorm2d(channels_before_wimcnn_unit),
             nn.ReLU6(),
 
             nn.MaxPool2d(3, stride=2),
         )
         self.convBlock2 = nn.Sequential(
-            nn.Conv2d(N_features_first, N_features_first, kernel_size=1),
+            nn.Conv2d(channels_before_wimcnn_unit, channels_before_wimcnn_unit, kernel_size=1),
             nn.ReLU6(),
 
-            nn.Conv2d(N_features_first, N_in_unit_features, kernel_size=3, padding=1),
-            nn.BatchNorm2d(N_in_unit_features),
+            nn.Conv2d(channels_before_wimcnn_unit, wimcnn_unit_in_channels, kernel_size=3, padding=1),
+            nn.BatchNorm2d(wimcnn_unit_in_channels),
             nn.ReLU6(),
 
             nn.MaxPool2d(3, stride=2, ceil_mode=True),
@@ -38,32 +38,32 @@ class WIMCNNModel(nn.Module):
         # Parameters for each block based on GoogLeNet and "Going Deeper with Convolutions" work (Szegedy et al., 2015)
         self.WIMCNNUnit = nn.Sequential(
             # By default: (192, 256, 64, (96, 128), (16, 24, 32), 32); ratio 2:4:1:1
-            WIMCNNBlock(N_in_unit_features, N_out_first_WIMCNN_block,
-                        int(N_out_first_WIMCNN_block / 4),
-                        (int(N_out_first_WIMCNN_block * 3 / 8), int(N_out_first_WIMCNN_block / 2)),
-                        (int(N_out_first_WIMCNN_block / 16), int(N_out_first_WIMCNN_block * 3 / 32),
-                         int(N_out_first_WIMCNN_block / 8)),
-                        int(N_out_first_WIMCNN_block / 8)),
+            WIMCNNBlock(wimcnn_unit_in_channels, wimcnn_first_block_out_channels,
+                        int(wimcnn_first_block_out_channels / 4),
+                        (int(wimcnn_first_block_out_channels * 3 / 8), int(wimcnn_first_block_out_channels / 2)),
+                        (int(wimcnn_first_block_out_channels / 16), int(wimcnn_first_block_out_channels * 3 / 32),
+                         int(wimcnn_first_block_out_channels / 8)),
+                        int(wimcnn_first_block_out_channels / 8)),
             nn.ReLU6(),
             # By default: (256, 480, 128, (128, 192), (32, 64, 96), 64); ratio 4:6:3:2
-            WIMCNNBlock(N_out_first_WIMCNN_block, N_out_second_WIMCNN_block,
-                        int(N_out_second_WIMCNN_block * 4 / 15),
-                        (int(N_out_second_WIMCNN_block * 4 / 15), int(N_out_second_WIMCNN_block * 2 / 5)),
-                        (int(N_out_second_WIMCNN_block / 15), int(N_out_second_WIMCNN_block * 2 / 15),
-                         int(N_out_second_WIMCNN_block / 5)),
-                        int(N_out_second_WIMCNN_block * 2 / 15)),
+            WIMCNNBlock(wimcnn_first_block_out_channels, wimcnn_second_block_out_channels,
+                        int(wimcnn_second_block_out_channels * 4 / 15),
+                        (int(wimcnn_second_block_out_channels * 4 / 15), int(wimcnn_second_block_out_channels * 2 / 5)),
+                        (int(wimcnn_second_block_out_channels / 15), int(wimcnn_second_block_out_channels * 2 / 15),
+                         int(wimcnn_second_block_out_channels / 5)),
+                        int(wimcnn_second_block_out_channels * 2 / 15)),
             nn.ReLU6(),
             # By default: (480, 512, 128, (128, 256), (24, 48, 64), 64); ratio 2:4:1:1
-            WIMCNNBlock(N_out_second_WIMCNN_block, N_final_features,
-                        int(N_final_features / 4),
-                        (int(N_final_features / 4), int(N_final_features / 2)),
-                        (int(N_final_features / 32), int(N_final_features / 16), int(N_final_features / 8)),
-                        int(N_final_features / 8)),
+            WIMCNNBlock(wimcnn_second_block_out_channels, out_channels,
+                        int(out_channels / 4),
+                        (int(out_channels / 4), int(out_channels / 2)),
+                        (int(out_channels / 32), int(out_channels / 16), int(out_channels / 8)),
+                        int(out_channels / 8)),
         )
 
-        self.residual_conv = nn.Conv2d(N_in_unit_features, N_final_features, kernel_size=1)
+        self.residual_conv = nn.Conv2d(wimcnn_unit_in_channels, out_channels, kernel_size=1)
         self.AvgPool = nn.AvgPool2d(13, ceil_mode=True)
-        self.linear = nn.Linear(N_final_features, num_classes)
+        self.linear = nn.Linear(out_channels, num_classes)
 
     def forward(self, x):
         # First convolution block

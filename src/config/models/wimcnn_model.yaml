@@ -1,5 +1,5 @@
 name: wimcnn_model
-_target_: wood-classification.models.wimcnn_model.WIMCNNModel
+_target_: wood-classification.checkpoints.wimcnn_model.WIMCNNModel
 
 num_classes: 12
 in_channels: 3
